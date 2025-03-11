@@ -22,15 +22,13 @@ jobs:
           fetch-depth: 0  # Tüm geçmişi al
           token: ${{ secrets.GLOBAL_SECRET_OEYI }}
 
+      - name: Fetch Latest Main
+        run: git fetch origin main
+
       - name: Configure Git User (Local)
         run: |
           git config --local user.name "ozgyilmaz"
           git config --local user.email "yelbuke@gmail.com"
-
-      - name: Configure Git
-        run: |
-          git config --global user.name "ozgyilmaz"
-          git config --global user.email "yelbuke@gmail.com"
 
       - name: Check Git Config
         run: |
@@ -42,6 +40,7 @@ jobs:
 
       - name: Add Remote with PAT
         run: |
+          git remote remove destination || echo "No existing remote"
           git remote add destination https://ozgyilmaz:${{ secrets.GLOBAL_SECRET_OEYI }}@github.com/TRON-Bioinformatics/testp.git
           git remote -v  # Debug için ekleyelim
 
