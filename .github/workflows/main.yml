@@ -1,49 +1,25 @@
-name: Sync to test public
+name: Repo Sync
 
 on:
-  push:
-    branches:
-      - main
-  
+  schedule: 
+  - cron: "*/15 * * * *" # every 15 minutes. set to whatever interval you like
+
 jobs:
-  sync:
+  repo-sync:
+    name: Repo Sync
     runs-on: ubuntu-latest
-    permissions: write-all
-
     steps:
-
-      - name: Disable Git Credential Helper
-        run: |
-          git config --global --unset credential.helper || echo "No credential helper set"
-
-      - name: Checkout source repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Tüm geçmişi al
-          token: ${{ secrets.GLOBAL_SECRET_OEYI }}
-
-      - name: Fetch Latest Main
-        run: git fetch origin main
-
-      - name: Configure Git User (Local)
-        run: |
-          git config --local user.name "ozgyilmaz"
-          git config --local user.email "yelbuke@gmail.com"
-
-      - name: Check Git Config
-        run: |
-          git config --list --show-origin || echo "No config found"
-          git remote -v
-          
-      - name: Debug Git Branches
-        run: git branch -a
-
-      - name: Add Remote with PAT
-        run: |
-          git remote remove destination || echo "No existing remote"
-          git remote add destination https://ozgyilmaz:${{ secrets.GLOBAL_SECRET_OEYI }}@github.com/TRON-Bioinformatics/testp.git
-          git remote -v  # Debug için ekleyelim
-
-      - name: Push main to destination repo
-        run: |
-          git push --force-with-lease destination main
+    - uses: actions/checkout@v3
+    - uses: repo-sync/github-sync@v2
+      name: Sync repo to branch
+      with:
+        source_repo: TRON-Bioinformatics/testp
+        source_branch: main
+        destination_branch: repo-sync
+        github_token: ${{ secrets.GLOBAL_SECRET_OEYI }}
+    - uses: repo-sync/pull-request@v2
+      name: Create pull request
+      with:
+        source_branch: repo-sync
+        destination_branch: main
+        github_token: ${{ secrets.GLOBAL_SECRET_OEYI }}
