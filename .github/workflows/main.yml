@@ -1,0 +1,50 @@
+name: Sync to test public
+
+on:
+  push:
+    branches:
+      - main
+  
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+
+      - name: Disable Git Credential Helper
+        run: |
+          git config --global --unset credential.helper || echo "No credential helper set"
+
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Tüm geçmişi al
+          token: ${{ secrets.GLOBAL_SECRET_OEYI }}
+
+      - name: Configure Git User (Local)
+        run: |
+          git config --local user.name "ozgyilmaz"
+          git config --local user.email "yelbuke@gmail.com"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "ozgyilmaz"
+          git config --global user.email "yelbuke@gmail.com"
+
+      - name: Check Git Config
+        run: |
+          git config --list --show-origin || echo "No config found"
+          git remote -v
+          
+      - name: Debug Git Branches
+        run: git branch -a
+
+      - name: Add Remote with PAT
+        run: |
+          git remote add destination https://ozgyilmaz:${{ secrets.GLOBAL_SECRET_OEYI }}@github.com/TRON-Bioinformatics/testp.git
+          git remote -v  # Debug için ekleyelim
+
+      - name: Push main to destination repo
+        run: |
+          git push --force-with-lease destination main
