@@ -47,4 +47,4 @@ jobs:
 
       - name: Push main to destination repo
         run: |
-          git push --force destination main
+          git push --force-with-lease destination main
