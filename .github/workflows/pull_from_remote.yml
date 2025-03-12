@@ -2,7 +2,7 @@ name: Pull from Remote Repo
 
 on:
   schedule:
-    - cron: "*/2 * * * *"  # Her 5 dakikada bir çalıştır
+    - cron: "*/2 * * * *"  # Her 2 dakikada bir çalıştır
 
 jobs:
   pull_sync:
@@ -10,7 +10,7 @@ jobs:
     permissions: write-all
 
     steps:
-      - name: Checkout Main Repo (Ana Repo)
+      - name: Checkout Main Repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Tüm geçmişi al
@@ -18,14 +18,14 @@ jobs:
       - name: Add Remote (Uzak Repo)
         run: |
           git remote add upstream https://github.com/TRON-Bioinformatics/testp.git
-          git fetch upstream  # Uzak repodaki güncellemeleri getir
+          git fetch upstream  # Uzak repodaki branch'ları güncelle
 
       - name: Pull Latest Changes
         run: |
           git checkout main
           git pull upstream main  # Ana branch için pull işlemi
 
-          git checkout upstream/dev
+          git checkout dev
           git pull upstream dev  # Dev branch için pull işlemi
 
       - name: Check Git Status
