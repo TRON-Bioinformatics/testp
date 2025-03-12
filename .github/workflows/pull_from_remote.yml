@@ -1,0 +1,32 @@
+name: Pull from Remote Repo
+
+on:
+  repository_dispatch:
+    types: [sync_trigger]  # Webhook'tan tetiklenecek
+
+jobs:
+  pull_sync:
+    runs-on: ubuntu-latest
+    permissions: write-all
+
+    steps:
+      - name: Checkout Main Repo (Ana Repo)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Tüm geçmişi al
+
+      - name: Add Remote (Uzak Repo)
+        run: |
+          git remote add upstream https://github.com/TRON-Bioinformatics/testp.git
+          git fetch upstream  # Uzak repodaki güncellemeleri getir
+
+      - name: Pull Latest Changes
+        run: |
+          git checkout main
+          git pull upstream main  # Ana branch için pull işlemi
+
+          git checkout dev
+          git pull upstream dev  # Dev branch için pull işlemi
+
+      - name: Check Git Status
+        run: git status
