@@ -22,10 +22,10 @@ jobs:
 
       - name: Pull Latest Changes
         run: |
-          git checkout main
+          git checkout upstream/main
           git pull upstream main  # Ana branch için pull işlemi
 
-          git checkout dev
+          git checkout upstream/dev
           git pull upstream dev  # Dev branch için pull işlemi
 
       - name: Check Git Status
