@@ -25,7 +25,7 @@ jobs:
           git checkout main
           git pull upstream main  # Ana branch için pull işlemi
 
-          git checkout dev
+          git checkout upstream/dev
           git pull upstream dev  # Dev branch için pull işlemi
 
       - name: Check Git Status
