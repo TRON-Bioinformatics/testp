@@ -1,4 +1,4 @@
-name: Sync to test public
+name: Sync
 
 on:
   push:
