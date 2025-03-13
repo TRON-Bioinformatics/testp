@@ -21,15 +21,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Tüm geçmişi al
-          token: ${{ secrets.GLOBAL_SECRET_OEYI }}
+          token: ${{ secrets.TEST_TOKEN }}
 
       - name: Fetch Latest Main
         run: git fetch origin main
 
       - name: Configure Git User (Local)
         run: |
-          git config --local user.name "ozgyilmaz"
-          git config --local user.email "yelbuke@gmail.com"
+          git config --local user.name "${{ secrets.TEST_USERNAME }}"
+          git config --local user.email "${{ secrets.TEST_EMAIL }}"
 
       - name: Check Git Config
         run: |
@@ -42,8 +42,8 @@ jobs:
       - name: Add Remote with PAT
         run: |
           git remote remove destination || echo "No existing remote"
-          git remote add destination https://ozgyilmaz:${{ secrets.GLOBAL_SECRET_OEYI }}@github.com/TRON-Bioinformatics/testp.git
-          git remote -v  # Debug için ekleyelim
+          git remote add destination https://${{ secrets.TEST_USERNAME }}:${{ secrets.TEST_TOKEN }}@github.com/${{ secrets.TEST_PUBLIC_REPO }}
+          git remote -v
 
       - name: Push main to destination repo
         run: |
