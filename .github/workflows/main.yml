@@ -42,7 +42,7 @@ jobs:
       - name: Add Remote with PAT
         run: |
           git remote remove destination || echo "No existing remote"
-          git remote add destination https://${{ secrets.TEST_USERNAME }}:${{ secrets.TEST_TOKEN }}@github.com/${{ secrets.TEST_PUBLIC_REPO }}
+          git remote add destination https://${{ secrets.TEST_USERNAME }}:${{ secrets.TEST_TOKEN }}@github.com/${{ secrets.TEST_DEST_REPO }}
           git remote -v
 
       - name: Push main to destination repo
